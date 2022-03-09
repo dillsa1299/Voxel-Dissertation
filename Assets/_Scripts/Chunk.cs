@@ -43,7 +43,7 @@ public static class Chunk
     // Get voxel within chunk - accepts vector instead of separate coordinates
     public static VoxelType GetVoxelFromChunkCoordinates(ChunkData chunkData, Vector3Int chunkCoordinates)
     {
-        return GetVoxelFromCoordinates(chunkData, chunkCoordinates.x, chunkCoordinates.y, chunkCoordinates.z);
+        return GetVoxelFromChunkCoordinates(chunkData, chunkCoordinates.x, chunkCoordinates.y, chunkCoordinates.z);
     }
 
     // Get voxel within chunk
@@ -56,7 +56,8 @@ public static class Chunk
             return chunkData.voxels[index];
         }
         // Coordinate is not within the passed chunk
-        throw new Exception("Need to ask World for appropriate chunk");
+        return chunkData.worldData.GetVoxelFromChunkCoordinates(chunkData, chunkData.worldPos.x + x,
+            chunkData.worldPos.y + y, chunkData.worldPos.z + z);
     }
 
     // Set voxel within chunk
@@ -97,8 +98,20 @@ public static class Chunk
     {
         MeshData meshData = new MeshData();
 
-        //Fill later
+        LoopThroughVoxels(chunkData, (x, y, z) => meshData = VoxelHelper.GetMeshData(chunkData, x, y, z,
+            meshData, chunkData.voxels[GetIndexFromPosition(chunkData, x, y, z)]));
 
         return meshData;
+    }
+
+    internal static Vector3Int ChunkPositionFromVoxelCoords(World world, int x, int y, int z)
+    {
+        Vector3Int pos = new Vector3Int
+        {
+            x = Mathf.FloorToInt(x / (float)world.chunkSize) * world.chunkSize,
+            y = Mathf.FloorToInt(y / (float)world.chunkHeight) * world.chunkHeight,
+            z = Mathf.FloorToInt(z / (float)world.chunkSize) * world.chunkSize
+        };
+        return pos;
     }
 }
