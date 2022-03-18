@@ -312,10 +312,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   worldSizeInChunks: 32
-  chunkSize: 32
+  chunkSize: 16
   chunkHeight: 64
-  waterHeight: 20
-  noiseScale: 0.005
+  waterHeight: 24
+  noiseScale: 0.015
   chunkPrefab: {fileID: 1454488083742004796, guid: 9d95b597093988b43bfe70798c969b8d, type: 3}
 --- !u!4 &75594999
 Transform:
@@ -1196,7 +1196,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Voxel Engine
 
-    Testing Environment'
+    Performance'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: e73a58f6e2794ae7b1b7e50b7fb811b0, type: 2}
