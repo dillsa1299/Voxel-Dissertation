@@ -61,6 +61,7 @@ public class ChunkRenderer : MonoBehaviour
 
         meshCollider.sharedMesh = null; 
         Mesh collisionMesh = new Mesh();
+        collisionMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         collisionMesh.vertices = meshData.colliderVertices.ToArray();
         collisionMesh.triangles = meshData.colliderTriangles.ToArray();
         collisionMesh.RecalculateNormals();

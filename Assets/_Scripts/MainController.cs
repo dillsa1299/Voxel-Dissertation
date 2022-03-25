@@ -31,6 +31,8 @@ public class MainController : MonoBehaviour
     public InputField optionsPerlinNoise;
     public InputField optionsWaterLevel;
 
+    public bool cullFaces = true;       
+
 
     enum GameMode
     {
@@ -46,6 +48,11 @@ public class MainController : MonoBehaviour
     void Start()
     {
         StartMainMenu();
+    }
+
+    public void ToggleCulling()
+    {
+        cullFaces = !cullFaces;
     }
 
     public void ResetCameraPos()

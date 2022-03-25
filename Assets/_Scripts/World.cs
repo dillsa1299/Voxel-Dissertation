@@ -9,7 +9,6 @@ public class World : MonoBehaviour
     public int waterHeight = 50;
     public float noiseScale = 0.03f;
     public GameObject chunkPrefab;
-    public static bool cullFaces = false;
 
     Dictionary<Vector3Int, ChunkData> chunkDataDictionary = new Dictionary<Vector3Int, ChunkData>();
     Dictionary<Vector3Int, ChunkRenderer> chunkDictionary = new Dictionary<Vector3Int, ChunkRenderer>();
@@ -68,7 +67,7 @@ public class World : MonoBehaviour
             for (int z = 0; z < data.size; z++) //Loop z
             {
                 float noiseValue = Mathf.PerlinNoise((data.worldPos.x + x) * noiseScale, (data.worldPos.z + z) * noiseScale);
-                int groundPosition = Mathf.RoundToInt(noiseValue * chunkHeight);
+                int groundPosition = Mathf.RoundToInt(noiseValue * chunkHeight-1);
 
                 for (int y = 0; y < chunkHeight; y++)
                 {

@@ -11,6 +11,7 @@ using UnityEngine;
 
 public static class VoxelHelper
 {
+    //public bool cullFaces = true;
     private static Direction[] directions =
     {
         Direction.backwards,
@@ -31,6 +32,8 @@ public static class VoxelHelper
             var neighbourVoxelCoordinates = new Vector3Int(x, y, z) + direction.GetVector();
             var neighbourVoxelType = Chunk.GetVoxelFromChunkCoordinates(chunk, neighbourVoxelCoordinates);
 
+            bool cullFaces = GameObject.Find("World").GetComponent<MainController>().cullFaces;
+            //This if statement controls if naive or not
             if (neighbourVoxelType != VoxelType.None && VoxelDataManager.voxelTextureDataDictionary
                 [neighbourVoxelType].isSolid == false)
             {
@@ -45,6 +48,10 @@ public static class VoxelHelper
                 {
                     meshData = GetFaceDataIn(direction, chunk, x, y, z, meshData, voxelType);
                 }
+            }
+            if (!cullFaces)
+            {
+                meshData = GetFaceDataIn(direction, chunk, x, y, z, meshData, voxelType);
             }
         }
         return meshData;
