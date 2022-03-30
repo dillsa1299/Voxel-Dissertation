@@ -21,7 +21,7 @@ public static class VoxelHelper
         Direction.right,
         Direction.up
     };
-
+    
     public static MeshData GetMeshData (ChunkData chunk, int x, int y, int z, MeshData meshData, VoxelType voxelType)
     {
         if (voxelType == VoxelType.Air || voxelType == VoxelType.None) //If air or nothing, don't add to mesh

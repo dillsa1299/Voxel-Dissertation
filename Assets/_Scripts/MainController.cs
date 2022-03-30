@@ -19,6 +19,7 @@ public class MainController : MonoBehaviour
     public bool isPlaying = false;
 
     public World world;
+    public BiomeGenerator biome;
 
     public InputField menuWorldSize;
     public InputField menuChunkSize;
@@ -31,8 +32,13 @@ public class MainController : MonoBehaviour
     public InputField optionsPerlinNoise;
     public InputField optionsWaterLevel;
 
-    public bool cullFaces = true;       
+    public bool cullFaces = true;
 
+    public int chunkRenderDistance = 2;
+
+    private GameObject[] chunks;
+
+    private ChunkRenderer[] chunkRenderers;
 
     enum GameMode
     {
@@ -48,6 +54,8 @@ public class MainController : MonoBehaviour
     void Start()
     {
         StartMainMenu();
+        //InvokeRepeating("UpdateChunks", 10f, 10f);
+        //Too expensive, takes approx 1 sec per update. Need to see how to optimise
     }
 
     public void ToggleCulling()
@@ -78,11 +86,11 @@ public class MainController : MonoBehaviour
         }
         if(menuPerlinNoise.text != "")
         {
-            world.noiseScale = float.Parse(menuPerlinNoise.text);
+            biome.noiseScale = float.Parse(menuPerlinNoise.text);
         }
         if(menuWaterLevel.text != "")
         {
-            world.waterHeight = int.Parse(menuWaterLevel.text);
+            biome.waterHeight = int.Parse(menuWaterLevel.text);
         }
     }
 
@@ -102,11 +110,11 @@ public class MainController : MonoBehaviour
         }
         if(optionsPerlinNoise.text != "")
         {
-            world.noiseScale = float.Parse(optionsPerlinNoise.text);
+            biome.noiseScale = float.Parse(optionsPerlinNoise.text);
         }
         if(optionsWaterLevel.text != "")
         {
-            world.waterHeight = int.Parse(optionsWaterLevel.text);
+            biome.waterHeight = int.Parse(optionsWaterLevel.text);
         }
     }
 
@@ -148,6 +156,34 @@ public class MainController : MonoBehaviour
         }
     }
 
+    void UpdateChunks()
+    {
+        if(gameMode == GameMode.Gameplay)
+        {
+            Vector3 playerPos = player.transform.position;
+            playerPos.y = 0;
+            int renderDistance = chunkRenderDistance * world.chunkSize;
+            foreach(ChunkRenderer chunk in chunkRenderers)
+            {
+                chunk.UpdateChunk(playerPos, renderDistance);
+            }
+            
+        }
+    }
+
+    void GetChunks()
+    {
+        chunks = GameObject.FindGameObjectsWithTag("Chunk");
+        ChunkRenderer[] temp = new ChunkRenderer[chunks.Length];
+        int i = 0;
+        foreach(GameObject chunk in chunks)
+        {
+            temp[i] = chunk.GetComponent<ChunkRenderer>();
+            i++;
+        }
+        chunkRenderers = temp;
+    }
+
     public void StartMainMenu()
     {
         gameMode                        = GameMode.MainMenu;
@@ -160,8 +196,8 @@ public class MainController : MonoBehaviour
         menuWorldSize.placeholder.GetComponent<Text>().text = world.worldSizeInChunks.ToString();
         menuChunkSize.placeholder.GetComponent<Text>().text = world.chunkSize.ToString();
         menuChunkHeight.placeholder.GetComponent<Text>().text = world.chunkHeight.ToString();
-        menuPerlinNoise.placeholder.GetComponent<Text>().text = world.noiseScale.ToString();
-        menuWaterLevel.placeholder.GetComponent<Text>().text = world.waterHeight.ToString();
+        menuPerlinNoise.placeholder.GetComponent<Text>().text = biome.noiseScale.ToString();
+        menuWaterLevel.placeholder.GetComponent<Text>().text = biome.waterHeight.ToString();
     }
 
     public void StartOptions()
@@ -176,8 +212,8 @@ public class MainController : MonoBehaviour
         optionsWorldSize.placeholder.GetComponent<Text>().text = world.worldSizeInChunks.ToString();
         optionsChunkSize.placeholder.GetComponent<Text>().text = world.chunkSize.ToString();
         optionsChunkHeight.placeholder.GetComponent<Text>().text = world.chunkHeight.ToString();
-        optionsPerlinNoise.placeholder.GetComponent<Text>().text = world.noiseScale.ToString();
-        optionsWaterLevel.placeholder.GetComponent<Text>().text = world.waterHeight.ToString();
+        optionsPerlinNoise.placeholder.GetComponent<Text>().text = biome.noiseScale.ToString();
+        optionsWaterLevel.placeholder.GetComponent<Text>().text = biome.waterHeight.ToString();
         optionsWorldSize.text = "";
         optionsChunkSize.text = "";
         optionsChunkHeight.text = "";
@@ -192,5 +228,7 @@ public class MainController : MonoBehaviour
         statsHUD.gameObject.SetActive(true);
         Cursor.lockState = CursorLockMode.Locked; //Locks Cursor
         isPlaying = true;
+        GetChunks();
+        UpdateChunks();
     }
 }
