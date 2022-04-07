@@ -22,7 +22,7 @@ public static class VoxelHelper
         Direction.up
     };
     
-    public static MeshData GetMeshData (ChunkData chunk, int x, int y, int z, MeshData meshData, VoxelType voxelType)
+    public static MeshData GetMeshData (ChunkData chunk, int x, int y, int z, MeshData meshData, VoxelType voxelType, bool cullFaces)
     {
         if (voxelType == VoxelType.Air || voxelType == VoxelType.None) //If air or nothing, don't add to mesh
             return meshData;
@@ -32,7 +32,6 @@ public static class VoxelHelper
             var neighbourVoxelCoordinates = new Vector3Int(x, y, z) + direction.GetVector();
             var neighbourVoxelType = Chunk.GetVoxelFromChunkCoordinates(chunk, neighbourVoxelCoordinates);
 
-            bool cullFaces = GameObject.Find("World").GetComponent<MainController>().cullFaces;
             //This if statement controls if naive or not
             if (neighbourVoxelType != VoxelType.None && VoxelDataManager.voxelTextureDataDictionary
                 [neighbourVoxelType].isSolid == false)

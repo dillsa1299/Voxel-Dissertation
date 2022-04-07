@@ -92,3 +92,10 @@ MonoBehaviour:
     frontBack: {x: 4, y: 0}
     isSolid: 0
     generatesCollider: 0
+  - voxelType: 12
+    top: {x: 4, y: 1}
+    bottom: {x: 4, y: 1}
+    leftRight: {x: 4, y: 1}
+    frontBack: {x: 4, y: 1}
+    isSolid: 1
+    generatesCollider: 1

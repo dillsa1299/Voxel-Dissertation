@@ -5,40 +5,33 @@ using UnityEngine;
 public class BiomeGenerator : MonoBehaviour
 {
     public int waterHeight = 50;
-    public float noiseScale = 0.03f;
+    public float noiseScale = 0.01f;
+    public NoiseData noiseData;
+    public VoxelLayerHandler startLayerHandler;
+    public List<VoxelLayerHandler> additionalLayerHandlers;
+
+    private int GetGroundHeightNoise(int x, int z, int height)
+    {
+        float groundHeight = CustomNoise.OctavePerlin(x, z, noiseData);
+        groundHeight = CustomNoise.Redistribution(groundHeight, noiseData);
+        int surfaceHeight = CustomNoise.RemapValue01ToInt(groundHeight, 0, height);
+        return surfaceHeight;
+    }
     public ChunkData GenerateColumnPerlin(ChunkData data, int x, int z, Vector2Int terrainOffset)
     {
-        float noiseValue = Mathf.PerlinNoise((terrainOffset.x + data.worldPos.x + x) * noiseScale,
-            (terrainOffset.y + data.worldPos.z + z) * noiseScale);
-        int groundPosition = Mathf.RoundToInt(noiseValue * data.height-1);
+        noiseData.terrainOffset = terrainOffset;
+        int groundPosition = GetGroundHeightNoise(data.worldPos.x + x, data.worldPos.z + z, data.height);
 
-        for (int y = 0; y < data.height; y++)
+        for (int y = 0; y < data.height-1; y++)
         {
-            VoxelType voxelType = VoxelType.Dirt;
-            if (y > groundPosition)
-            {
-                if (y < waterHeight)
-                {
-                    voxelType = VoxelType.Water;
-                }
-                else
-                {
-                    voxelType = VoxelType.Air;
-                }
-            }
-            else if (y == groundPosition)
-            {
-                if(y < waterHeight)
-                {
-                    voxelType = VoxelType.Sand;
-                }
-                else
-                {
-                    voxelType = VoxelType.Grass;
-                }
-            }
-            Chunk.SetVoxel(data, new Vector3Int(x, y, z), voxelType);
+            startLayerHandler.Handle(data, x, y, z, groundPosition, terrainOffset);
         }
+
+        foreach(var layer in additionalLayerHandlers)
+        {
+            layer.Handle(data, x, data.worldPos.y, z, groundPosition, terrainOffset);
+        }
+
         return data;
     }
 

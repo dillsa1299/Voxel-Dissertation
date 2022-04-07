@@ -17,11 +17,11 @@ public class MouseLook : MonoBehaviour
 
     public float xRotation = 0f;
 
-    public GameObject world;
+    public MainController controller;
 
     void Update()
     {
-        if (world.GetComponent<MainController>().isPlaying)
+        if (controller.isPlaying)
         {
             float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
             float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;

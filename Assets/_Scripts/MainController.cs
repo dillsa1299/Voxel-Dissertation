@@ -10,17 +10,23 @@ using UnityEngine.UI;
 public class MainController : MonoBehaviour
 {
 
-    public GameObject menuUI;
-    public GameObject optionsUI;
-    public GameObject statsHUD;
+    
     public GameObject player;
-    private PlayerMovement playerMovement;
-    public Camera mainCam;
-    public bool isPlaying = false;
+    public Vector3Int playerChunkPos;
+    private Vector3Int currentChunkCenterPos = Vector3Int.zero; //Camera starts at (0,0)
 
     public World world;
     public BiomeGenerator biome;
 
+    public bool isPlaying = false;
+    public bool cullFaces = true;
+    public float chunkUpdateTime = 1;
+
+
+    //UI References
+    public GameObject menuUI;
+    public GameObject optionsUI;
+    public GameObject statsHUD;
     public InputField menuWorldSize;
     public InputField menuChunkSize;
     public InputField menuChunkHeight;
@@ -31,14 +37,6 @@ public class MainController : MonoBehaviour
     public InputField optionsChunkHeight;
     public InputField optionsPerlinNoise;
     public InputField optionsWaterLevel;
-
-    public bool cullFaces = true;
-
-    public int chunkRenderDistance = 2;
-
-    private GameObject[] chunks;
-
-    private ChunkRenderer[] chunkRenderers;
 
     enum GameMode
     {
@@ -54,8 +52,6 @@ public class MainController : MonoBehaviour
     void Start()
     {
         StartMainMenu();
-        //InvokeRepeating("UpdateChunks", 10f, 10f);
-        //Too expensive, takes approx 1 sec per update. Need to see how to optimise
     }
 
     public void ToggleCulling()
@@ -63,68 +59,46 @@ public class MainController : MonoBehaviour
         cullFaces = !cullFaces;
     }
 
-    public void ResetCameraPos()
+    public void StartChunkUpdates()
     {
-        Vector3 tpPos = new Vector3((world.chunkSize*world.worldSizeInChunks)/2, world.chunkHeight*1.5f,(world.chunkSize*world.worldSizeInChunks)/2);
-        player.GetComponent<PlayerMovement>().teleportPlayer(tpPos); //TELEPORT TO MIDDLE OF MAP
-        mainCam.GetComponent<MouseLook>().xRotation = 45f;
+        SetCurrentChunkCoordinates();
+        StopAllCoroutines();
+        StartCoroutine(CheckIfLoadNextChunk());
     }
 
-    public void setSizesMenu()
+    IEnumerator CheckIfLoadNextChunk()
     {
-        if(menuWorldSize.text != "")
+        yield return new WaitForSeconds(chunkUpdateTime);
+        if (
+            Mathf.Abs(currentChunkCenterPos.x - player.transform.position.x) > world.chunkSize ||
+            Mathf.Abs(currentChunkCenterPos.z - player.transform.position.z) > world.chunkSize ||
+            (Mathf.Abs(playerChunkPos.y - player.transform.position.y) > world.chunkHeight)
+            )
         {
-            world.worldSizeInChunks = int.Parse(menuWorldSize.text);
+            world.LoadNextChunks(player);
+            StartCoroutine(CheckIfLoadNextChunk());
         }
-        if(menuChunkSize.text != "")
+        else
         {
-            world.chunkSize = int.Parse(menuChunkSize.text);
-        }
-        if(menuChunkHeight.text != "")
-        {
-            world.chunkHeight = int.Parse(menuChunkHeight.text);
-        }
-        if(menuPerlinNoise.text != "")
-        {
-            biome.noiseScale = float.Parse(menuPerlinNoise.text);
-        }
-        if(menuWaterLevel.text != "")
-        {
-            biome.waterHeight = int.Parse(menuWaterLevel.text);
+            StartCoroutine(CheckIfLoadNextChunk());
         }
     }
 
-    public void setSizesOptions()
+    private void SetCurrentChunkCoordinates()
     {
-        if(optionsWorldSize.text != "")
-        {
-            world.worldSizeInChunks = int.Parse(optionsWorldSize.text);
-        }
-        if(optionsChunkSize.text != "")
-        {
-            world.chunkSize = int.Parse(optionsChunkSize.text);
-        }
-        if(optionsChunkHeight.text != "")
-        {
-            world.chunkHeight = int.Parse(optionsChunkHeight.text);
-        }
-        if(optionsPerlinNoise.text != "")
-        {
-            biome.noiseScale = float.Parse(optionsPerlinNoise.text);
-        }
-        if(optionsWaterLevel.text != "")
-        {
-            biome.waterHeight = int.Parse(optionsWaterLevel.text);
-        }
+        playerChunkPos = WorldDataHelper.ChunkPositionFromVoxelCoords(world, Vector3Int.RoundToInt(player.transform.position));
+        currentChunkCenterPos.x = playerChunkPos.x + world.chunkSize / 2;
+        currentChunkCenterPos.z = playerChunkPos.z + world.chunkSize / 2;
     }
 
-    // Update is called once per frame
+    /*
+        State controllers below
+    */
     void Update()
     {
         switch(gameMode)
         {
             case GameMode.MainMenu:
-                UpdateMainMenu();
                 break;
             case GameMode.Options:
                 UpdateOptions();
@@ -133,11 +107,6 @@ public class MainController : MonoBehaviour
                 UpdateGameplay();
                 break;
         }
-    }
-
-    void UpdateMainMenu()
-    {
-
     }
 
     void UpdateOptions()
@@ -154,34 +123,6 @@ public class MainController : MonoBehaviour
         {
             StartOptions();
         }
-    }
-
-    void UpdateChunks()
-    {
-        if(gameMode == GameMode.Gameplay)
-        {
-            Vector3 playerPos = player.transform.position;
-            playerPos.y = 0;
-            int renderDistance = chunkRenderDistance * world.chunkSize;
-            foreach(ChunkRenderer chunk in chunkRenderers)
-            {
-                chunk.UpdateChunk(playerPos, renderDistance);
-            }
-            
-        }
-    }
-
-    void GetChunks()
-    {
-        chunks = GameObject.FindGameObjectsWithTag("Chunk");
-        ChunkRenderer[] temp = new ChunkRenderer[chunks.Length];
-        int i = 0;
-        foreach(GameObject chunk in chunks)
-        {
-            temp[i] = chunk.GetComponent<ChunkRenderer>();
-            i++;
-        }
-        chunkRenderers = temp;
     }
 
     public void StartMainMenu()
@@ -228,7 +169,55 @@ public class MainController : MonoBehaviour
         statsHUD.gameObject.SetActive(true);
         Cursor.lockState = CursorLockMode.Locked; //Locks Cursor
         isPlaying = true;
-        GetChunks();
-        UpdateChunks();
+        StartChunkUpdates();
+    }
+
+    //Sets variables to values in input boxes
+    public void setSizesMenu()
+    {
+        if(menuWorldSize.text != "")
+        {
+            world.worldSizeInChunks = int.Parse(menuWorldSize.text);
+        }
+        if(menuChunkSize.text != "")
+        {
+            world.chunkSize = int.Parse(menuChunkSize.text);
+        }
+        if(menuChunkHeight.text != "")
+        {
+            world.chunkHeight = int.Parse(menuChunkHeight.text);
+        }
+        if(menuPerlinNoise.text != "")
+        {
+            biome.noiseScale = float.Parse(menuPerlinNoise.text);
+        }
+        if(menuWaterLevel.text != "")
+        {
+            biome.waterHeight = int.Parse(menuWaterLevel.text);
+        }
+    }
+
+    public void setSizesOptions()
+    {
+        if(optionsWorldSize.text != "")
+        {
+            world.worldSizeInChunks = int.Parse(optionsWorldSize.text);
+        }
+        if(optionsChunkSize.text != "")
+        {
+            world.chunkSize = int.Parse(optionsChunkSize.text);
+        }
+        if(optionsChunkHeight.text != "")
+        {
+            world.chunkHeight = int.Parse(optionsChunkHeight.text);
+        }
+        if(optionsPerlinNoise.text != "")
+        {
+            biome.noiseScale = float.Parse(optionsPerlinNoise.text);
+        }
+        if(optionsWaterLevel.text != "")
+        {
+            biome.waterHeight = int.Parse(optionsWaterLevel.text);
+        }
     }
 }

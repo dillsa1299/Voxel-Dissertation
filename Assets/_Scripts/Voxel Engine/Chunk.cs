@@ -94,12 +94,12 @@ public static class Chunk
         };
     }
 
-    internal static MeshData GetChunkMeshData(ChunkData chunkData)
+    public static MeshData GetChunkMeshData(ChunkData chunkData, bool cullFaces)
     {
         MeshData meshData = new MeshData(true);
 
         LoopThroughVoxels(chunkData, (x, y, z) => meshData = VoxelHelper.GetMeshData(chunkData, x, y, z,
-            meshData, chunkData.voxels[GetIndexFromPosition(chunkData, x, y, z)]));
+            meshData, chunkData.voxels[GetIndexFromPosition(chunkData, x, y, z)], cullFaces));
 
         return meshData;
     }

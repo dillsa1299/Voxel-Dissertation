@@ -15,5 +15,6 @@ public enum VoxelType
     Grass,
     Dirt,
     Sand,
-    Water
+    Water,
+    Stone
 }
