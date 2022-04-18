@@ -13,50 +13,72 @@ public class MainController : MonoBehaviour
     
     public GameObject player;
     public Vector3Int playerChunkPos;
-    private Vector3Int currentChunkCenterPos = Vector3Int.zero; //Camera starts at (0,0)
+    private Vector3Int currentChunkCenterPos;
 
     public World world;
     public BiomeGenerator biome;
+    public WaterLayerHandler waterLayer;
+    public NoiseData noiseData;
 
     public bool isPlaying = false;
-    public bool cullFaces = true;
-    public float chunkUpdateTime = 1;
+    public float chunkUpdateTime = 1f;
 
 
     //UI References
-    public GameObject menuUI;
-    public GameObject optionsUI;
+    public GameObject Menu;
+    public GameObject Options;
+    public GameObject PerlinOptions;
+    public GameObject PerlinAdvancedOptions;
     public GameObject statsHUD;
-    public InputField menuWorldSize;
-    public InputField menuChunkSize;
-    public InputField menuChunkHeight;
-    public InputField menuPerlinNoise;
-    public InputField menuWaterLevel;
-    public InputField optionsWorldSize;
-    public InputField optionsChunkSize;
-    public InputField optionsChunkHeight;
-    public InputField optionsPerlinNoise;
-    public InputField optionsWaterLevel;
+    public InputField Options_RenderDistance;
+    public InputField Options_ChunkHeight;
+    public InputField PerlinOptions_OffsetX;
+    public InputField PerlinOptions_OffsetY;
+    public InputField PerlinOptions_WaterHeight;
+    public InputField PerlinOptions_NoiseScale;
+    public InputField PerlinAdvancedOptions_Persistance;
+    public InputField PerlinAdvancedOptions_Redistribution;
+    public InputField PerlinAdvancedOptions_Exponent;
+    public InputField PerlinAdvancedOptions_NoiseZoom;
+    public InputField PerlinAdvancedOptions_Octaves;
 
     enum GameMode
     {
         
-        MainMenu,
+        Menu,
         Options,
+        PerlinOptions,
+        PerlinAdvancedOptions,
         Gameplay
     }
 
-    GameMode gameMode = GameMode.MainMenu;
+    GameMode gameMode = GameMode.Menu;
 
     // Start is called before the first frame update
     void Start()
     {
-        StartMainMenu();
+        StartMenu();
+        currentChunkCenterPos = Vector3Int.RoundToInt(player.transform.position);
     }
 
     public void ToggleCulling()
     {
-        cullFaces = !cullFaces;
+        world.cullFaces = !world.cullFaces;
+    }
+
+    public void RegeneratePerlin()
+    {
+        world.RegeneratePerlin(Vector3Int.RoundToInt(player.transform.position));
+    }
+
+    public void RegenerateSpheres()
+    {
+        world.RegenerateSpheres(Vector3Int.RoundToInt(player.transform.position));
+    }
+
+    public void RegenerateGrid()
+    {
+        world.RegenerateGrid(Vector3Int.RoundToInt(player.transform.position));
     }
 
     public void StartChunkUpdates()
@@ -98,10 +120,17 @@ public class MainController : MonoBehaviour
     {
         switch(gameMode)
         {
-            case GameMode.MainMenu:
+            case GameMode.Menu:
+                UpdateMenu();
                 break;
             case GameMode.Options:
                 UpdateOptions();
+                break;
+            case GameMode.PerlinOptions:
+                UpdatePerlinOptions();
+                break;
+            case GameMode.PerlinAdvancedOptions:
+                UpdatePerlinAdvancedOptions();
                 break;
             case GameMode.Gameplay:
                 UpdateGameplay();
@@ -109,11 +138,32 @@ public class MainController : MonoBehaviour
         }
     }
 
-    void UpdateOptions()
+    void UpdateMenu()
     {
         if(Input.GetKeyDown(KeyCode.Escape))
         {
             StartGameplay();
+        }
+    }
+    void UpdateOptions()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            StartMenu();
+        }
+    }
+    void UpdatePerlinOptions()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            StartMenu();
+        }
+    }
+    void UpdatePerlinAdvancedOptions()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            StartPerlinOptions();
         }
     }
 
@@ -121,51 +171,90 @@ public class MainController : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            StartOptions();
+            StartMenu();
         }
     }
 
-    public void StartMainMenu()
+    public void StartMenu()
     {
-        gameMode                        = GameMode.MainMenu;
-        menuUI.gameObject.SetActive(true);
-        optionsUI.gameObject.SetActive(false);
+        gameMode                        = GameMode.Menu;
+        Menu.gameObject.SetActive(true);
+        Options.gameObject.SetActive(false);
+        PerlinOptions.gameObject.SetActive(false);
+        PerlinAdvancedOptions.gameObject.SetActive(false);
         statsHUD.gameObject.SetActive(false);
         Cursor.lockState = CursorLockMode.None; //Unlocks Cursor
         isPlaying = false;
-
-        menuWorldSize.placeholder.GetComponent<Text>().text = world.worldSizeInChunks.ToString();
-        menuChunkSize.placeholder.GetComponent<Text>().text = world.chunkSize.ToString();
-        menuChunkHeight.placeholder.GetComponent<Text>().text = world.chunkHeight.ToString();
-        menuPerlinNoise.placeholder.GetComponent<Text>().text = biome.noiseScale.ToString();
-        menuWaterLevel.placeholder.GetComponent<Text>().text = biome.waterHeight.ToString();
     }
 
     public void StartOptions()
     {
         gameMode                        = GameMode.Options;
-        menuUI.gameObject.SetActive(false);
-        optionsUI.gameObject.SetActive(true);
+        Menu.gameObject.SetActive(false);
+        Options.gameObject.SetActive(true);
+        PerlinOptions.gameObject.SetActive(false);
+        PerlinAdvancedOptions.gameObject.SetActive(false);
         statsHUD.gameObject.SetActive(false);
         Cursor.lockState = CursorLockMode.None; //Unlocks Cursor
         isPlaying = false;
 
-        optionsWorldSize.placeholder.GetComponent<Text>().text = world.worldSizeInChunks.ToString();
-        optionsChunkSize.placeholder.GetComponent<Text>().text = world.chunkSize.ToString();
-        optionsChunkHeight.placeholder.GetComponent<Text>().text = world.chunkHeight.ToString();
-        optionsPerlinNoise.placeholder.GetComponent<Text>().text = biome.noiseScale.ToString();
-        optionsWaterLevel.placeholder.GetComponent<Text>().text = biome.waterHeight.ToString();
-        optionsWorldSize.text = "";
-        optionsChunkSize.text = "";
-        optionsChunkHeight.text = "";
-        optionsPerlinNoise.text = "";
-        optionsWaterLevel.text = "";
+        Options_RenderDistance.placeholder.GetComponent<Text>().text = world.chunkRenderDistance.ToString();
+        Options_RenderDistance.text = "";
+        Options_ChunkHeight.placeholder.GetComponent<Text>().text = world.chunkHeight.ToString();
+        Options_ChunkHeight.text = "";
     }
+
+    public void StartPerlinOptions()
+    {
+        gameMode                        = GameMode.PerlinOptions;
+        Menu.gameObject.SetActive(false);
+        Options.gameObject.SetActive(false);
+        PerlinOptions.gameObject.SetActive(true);
+        PerlinAdvancedOptions.gameObject.SetActive(false);
+        statsHUD.gameObject.SetActive(false);
+        Cursor.lockState = CursorLockMode.None; //Unlocks Cursor
+        isPlaying = false;
+
+        PerlinOptions_OffsetX.placeholder.GetComponent<Text>().text = world.terrainOffset.x.ToString();
+        PerlinOptions_OffsetX.text = "";
+        PerlinOptions_OffsetY.placeholder.GetComponent<Text>().text = world.terrainOffset.y.ToString();
+        PerlinOptions_OffsetY.text = "";
+        PerlinOptions_WaterHeight.placeholder.GetComponent<Text>().text = waterLayer.waterLevel.ToString();
+        PerlinOptions_WaterHeight.text = "";
+        PerlinOptions_NoiseScale.placeholder.GetComponent<Text>().text = biome.noiseScale.ToString();
+        PerlinOptions_NoiseScale.text = "";
+    }
+
+    public void StartPerlinAdvancedOptions()
+    {
+        gameMode                        = GameMode.PerlinAdvancedOptions;
+        Menu.gameObject.SetActive(false);
+        Options.gameObject.SetActive(false);
+        PerlinOptions.gameObject.SetActive(false);
+        PerlinAdvancedOptions.gameObject.SetActive(true);
+        statsHUD.gameObject.SetActive(false);
+        Cursor.lockState = CursorLockMode.None; //Unlocks Cursor
+        isPlaying = false;
+
+        PerlinAdvancedOptions_Persistance.placeholder.GetComponent<Text>().text = noiseData.persistance.ToString();
+        PerlinAdvancedOptions_Persistance.text = "";
+        PerlinAdvancedOptions_Redistribution.placeholder.GetComponent<Text>().text = noiseData.redistributionModifier.ToString();
+        PerlinAdvancedOptions_Redistribution.text = "";
+        PerlinAdvancedOptions_Exponent.placeholder.GetComponent<Text>().text = noiseData.exponent.ToString();
+        PerlinAdvancedOptions_Exponent.text = "";
+        PerlinAdvancedOptions_NoiseZoom.placeholder.GetComponent<Text>().text = noiseData.noiseZoom.ToString();
+        PerlinAdvancedOptions_NoiseZoom.text = "";
+        PerlinAdvancedOptions_Octaves.placeholder.GetComponent<Text>().text = noiseData.octaves.ToString();
+        PerlinAdvancedOptions_Octaves.text = "";
+    }
+
     public void StartGameplay()
     {
         gameMode                        = GameMode.Gameplay;
-        menuUI.gameObject.SetActive(false);
-        optionsUI.gameObject.SetActive(false);
+        Menu.gameObject.SetActive(false);
+        Options.gameObject.SetActive(false);
+        PerlinOptions.gameObject.SetActive(false);
+        PerlinAdvancedOptions.gameObject.SetActive(false);
         statsHUD.gameObject.SetActive(true);
         Cursor.lockState = CursorLockMode.Locked; //Locks Cursor
         isPlaying = true;
@@ -173,51 +262,58 @@ public class MainController : MonoBehaviour
     }
 
     //Sets variables to values in input boxes
-    public void setSizesMenu()
+    public void SetInputOptions()
     {
-        if(menuWorldSize.text != "")
+        if(Options_ChunkHeight.text != "")
         {
-            world.worldSizeInChunks = int.Parse(menuWorldSize.text);
+            world.chunkHeight = int.Parse(Options_ChunkHeight.text.ToString());
         }
-        if(menuChunkSize.text != "")
+        if(Options_RenderDistance.text != "")
         {
-            world.chunkSize = int.Parse(menuChunkSize.text);
+            world.chunkRenderDistance = int.Parse(Options_RenderDistance.text);
         }
-        if(menuChunkHeight.text != "")
+    }
+    public void SetInputPerlin()
+    {
+        if(PerlinOptions_OffsetX.text != "")
         {
-            world.chunkHeight = int.Parse(menuChunkHeight.text);
+            world.terrainOffset.x = int.Parse(PerlinOptions_OffsetX.text.ToString());
         }
-        if(menuPerlinNoise.text != "")
+        if(PerlinOptions_OffsetY.text != "")
         {
-            biome.noiseScale = float.Parse(menuPerlinNoise.text);
+            world.terrainOffset.y = int.Parse(PerlinOptions_OffsetY.text.ToString());
         }
-        if(menuWaterLevel.text != "")
+        if(PerlinOptions_WaterHeight.text != "")
         {
-            biome.waterHeight = int.Parse(menuWaterLevel.text);
+            waterLayer.waterLevel = int.Parse(PerlinOptions_WaterHeight.text);
+        }
+        if(PerlinOptions_NoiseScale.text != "")
+        {
+            biome.noiseScale = float.Parse(PerlinOptions_NoiseScale.text);
         }
     }
 
-    public void setSizesOptions()
+    public void SetInputPerlinAdvanced()
     {
-        if(optionsWorldSize.text != "")
+        if(PerlinAdvancedOptions_Persistance.text != "")
         {
-            world.worldSizeInChunks = int.Parse(optionsWorldSize.text);
+            noiseData.persistance = float.Parse(PerlinAdvancedOptions_Persistance.text.ToString());
         }
-        if(optionsChunkSize.text != "")
+        if(PerlinAdvancedOptions_Redistribution.text != "")
         {
-            world.chunkSize = int.Parse(optionsChunkSize.text);
+            noiseData.redistributionModifier = float.Parse(PerlinAdvancedOptions_Redistribution.text.ToString());
         }
-        if(optionsChunkHeight.text != "")
+        if(PerlinAdvancedOptions_Exponent.text != "")
         {
-            world.chunkHeight = int.Parse(optionsChunkHeight.text);
+            noiseData.exponent = float.Parse(PerlinAdvancedOptions_Exponent.text.ToString());
         }
-        if(optionsPerlinNoise.text != "")
+        if(PerlinAdvancedOptions_NoiseZoom.text != "")
         {
-            biome.noiseScale = float.Parse(optionsPerlinNoise.text);
+            noiseData.noiseZoom = float.Parse(PerlinAdvancedOptions_NoiseZoom.text.ToString());
         }
-        if(optionsWaterLevel.text != "")
+        if(PerlinAdvancedOptions_Octaves.text != "")
         {
-            biome.waterHeight = int.Parse(optionsWaterLevel.text);
+            noiseData.octaves = int.Parse(PerlinAdvancedOptions_Octaves.text.ToString());
         }
     }
 }

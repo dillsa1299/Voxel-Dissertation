@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BiomeGenerator : MonoBehaviour
 {
-    public int waterHeight = 50;
     public float noiseScale = 0.01f;
     public NoiseData noiseData;
     public VoxelLayerHandler startLayerHandler;

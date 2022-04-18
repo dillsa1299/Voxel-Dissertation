@@ -67,11 +67,6 @@ public class ChunkRenderer : MonoBehaviour
         meshCollider.sharedMesh = collisionMesh;
     }
 
-    public void UpdateChunk(bool cullFaces)
-    {
-        RenderMesh(Chunk.GetChunkMeshData(ChunkData, cullFaces));
-    }
-
     public void UpdateChunk(MeshData data)
     {
         RenderMesh(data);

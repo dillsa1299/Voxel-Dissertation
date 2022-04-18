@@ -13,7 +13,7 @@ public class World : MonoBehaviour
     public int worldSizeInChunks = 6;
     public int chunkSize = 16, chunkHeight = 100;
     public int chunkRenderDistance = 4;
-    private int worldType = 0;
+    public int worldType = 0;
     public GameObject chunkPrefab;
     public TerrainGenerator terrainGenerator;
     public Vector2Int terrainOffset;
@@ -25,6 +25,7 @@ public class World : MonoBehaviour
     private bool IsWorldCreated = false;
 
     public bool cullFaces = true;
+    public bool resetWorld = false;
 
     CancellationTokenSource taskTokenSource = new CancellationTokenSource();
 
@@ -39,14 +40,49 @@ public class World : MonoBehaviour
         };
     }
     
-    public async void GenerateWorld(int generationMode)
+    public async void RegeneratePerlin(Vector3Int playerPos)
     {
-        await GenerateWorld(Vector3Int.zero, generationMode);
+        resetWorld = true;
+        await GenerateWorld(playerPos, 0);
     }
-    private async Task GenerateWorld(Vector3Int position, int generationMode)
+
+    public async void RegenerateSpheres(Vector3Int playerPos)
+    {
+        resetWorld = true;
+        await GenerateWorld(playerPos, 1);
+    }
+
+    public async void RegenerateGrid(Vector3Int playerPos)
+    {
+        resetWorld = true;
+        await GenerateWorld(playerPos, 2);
+    }
+    
+    public async Task GenerateWorld(Vector3Int position, int generationMode)
     {
         worldType = generationMode;
-        WorldGenerationData worldGenerationData = await Task.Run(() =>GetPositionsVisibleToCamera(position), taskTokenSource.Token);
+        WorldGenerationData worldGenerationData = new WorldGenerationData();        
+
+        //After making changes to generation settings, world needs to be reset to show changes
+        if(resetWorld)
+        {
+            worldGenerationData = await Task.Run(() =>ResetMap(position), taskTokenSource.Token);
+            foreach (var chunk in worldData.chunkDataDictionary)
+            {
+                WorldDataHelper.RemoveChunk(this, chunk.Key);
+            }
+            worldData.chunkDataDictionary.Clear();
+
+            foreach (var chunk in worldData.chunkDictionary)
+            {
+                WorldDataHelper.RemoveChunk(this, chunk.Key);
+            }
+            worldData.chunkDictionary.Clear();
+        }
+        else
+        {
+            worldGenerationData = await Task.Run(() =>GetPositionsVisibleToCamera(position), taskTokenSource.Token);
+        }
 
         foreach (var pos in worldGenerationData.chunkPositionsToRemove)
         {
@@ -57,6 +93,7 @@ public class World : MonoBehaviour
         {
             WorldDataHelper.RemoveChunk(this, pos);
         }
+
 
         //Concurrent Dictionary required for processing on separate thread
         ConcurrentDictionary<Vector3Int, ChunkData> dataDictionary = null;
@@ -114,6 +151,12 @@ public class World : MonoBehaviour
         }, taskTokenSource.Token
         );
     }
+    /*
+
+        Could Set chunkDataPositionsToCreate to current chunk positions,
+        then clear current chunk positions
+
+    */
 
     private Task<ConcurrentDictionary<Vector3Int, ChunkData>> CalculateWorldChunkData(List<Vector3Int> chunkDataPositionsToCreate)
     {
@@ -169,25 +212,32 @@ public class World : MonoBehaviour
         return data;
     }
 
+    private WorldGenerationData ResetMap(Vector3Int playerPos)
+    {
+        List<Vector3Int> allChunkPositionsNeeded = WorldDataHelper.GetChunkPositionsAroundPlayer(this, playerPos);
+        List<Vector3Int> allChunkDataPositionsNeeded = WorldDataHelper.GetDataPositionsAroundPlayer(this, playerPos);
+
+        List<Vector3Int> chunkPositionsToCreate = allChunkPositionsNeeded;
+        List<Vector3Int> chunkDataPositionsToCreate = allChunkDataPositionsNeeded;
+
+        List<Vector3Int> chunkPositionsToRemove = allChunkPositionsNeeded;//WorldDataHelper.GetAllChunksToRemove(worldData);
+        List<Vector3Int> chunkDataToRemove = allChunkDataPositionsNeeded;//WorldDataHelper.GetAllDataToRemove(worldData);
+
+        WorldGenerationData data = new WorldGenerationData
+        {
+            chunkPositionsToCreate = chunkPositionsToCreate,
+            chunkDataPositionsToCreate = chunkDataPositionsToCreate,
+            chunkPositionsToRemove = chunkPositionsToRemove,
+            chunkDataToRemove = chunkDataToRemove
+        };
+        resetWorld = false;
+        return data;
+    }
+
     internal async void LoadNextChunks(GameObject player)
     {
         await GenerateWorld(Vector3Int.RoundToInt(player.transform.position), worldType);
         OnNewChunksGenerated?.Invoke();
-    }
-
-    public void RegeneratePerlin()
-    {
-        GenerateWorld(0);
-    }
-
-    public void RegenerateSpheres()
-    {
-        GenerateWorld(1);
-    }
-
-    public void RegenerateGrid()
-    {
-        GenerateWorld(2);
     }
 
     internal VoxelType GetVoxelFromChunkCoordinates(ChunkData chunkData, int x, int y, int z)
@@ -205,7 +255,6 @@ public class World : MonoBehaviour
 
     internal void RemoveChunk(ChunkRenderer chunk)
     {
-        //chunk.gameObject.SetActive(false);
         Destroy(chunk.gameObject);
     }
 

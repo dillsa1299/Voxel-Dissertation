@@ -30,17 +30,6 @@ public class WorldDataHelper : MonoBehaviour
             {
                 Vector3Int chunkPos = ChunkPositionFromVoxelCoords(world, new Vector3Int(x, 0, z));
                 chunkPositionsToCreate.Add(chunkPos);
-                // if (x >= playerPos.x - world.chunkSize
-                //     && x <= playerPos.x + world.chunkSize
-                //     && z >= playerPos.z - world.chunkSize
-                //     && z <= playerPos.z + world.chunkSize)
-                // {
-                //     for (int y = -world.chunkHeight; y >= playerPos.y - world.chunkHeight * 2; y -= world.chunkHeight)
-                //     {
-                //         chunkPos = ChunkPositionFromVoxelCoords(world, new Vector3Int(x, y, z));
-                //         chunkPositionsToCreate.Add(chunkPos);
-                //     }
-                // }
             }
         }
         return chunkPositionsToCreate;
@@ -62,17 +51,6 @@ public class WorldDataHelper : MonoBehaviour
             {
                 Vector3Int chunkPos = ChunkPositionFromVoxelCoords(world, new Vector3Int(x, 0, z));
                 chunkDataPositionsToCreate.Add(chunkPos);
-                // if (x >= playerPos.x - world.chunkSize
-                //     && x <= playerPos.x + world.chunkSize
-                //     && z >= playerPos.z - world.chunkSize
-                //     && z <= playerPos.z + world.chunkSize)
-                // {
-                //     for (int y = -world.chunkHeight; y >= playerPos.y - world.chunkHeight * 2; y -= world.chunkHeight)
-                //     {
-                //         chunkPos = ChunkPositionFromVoxelCoords(world, new Vector3Int(x, y, z));
-                //         chunkDataPositionsToCreate.Add(chunkPos);
-                //     }
-                // }
             }
         }
         return chunkDataPositionsToCreate;
@@ -83,7 +61,7 @@ public class WorldDataHelper : MonoBehaviour
         return allChunkPositionsNeeded
             .Where(pos => worldData.chunkDictionary.ContainsKey(pos) == false)
             .OrderBy(pos => Vector3.Distance(playerPos, pos))
-            .ToList();               
+            .ToList();
     }
 
     internal static List<Vector3Int> GetChunksToRemove(World.WorldData worldData, List<Vector3Int> allChunkPositionsNeeded)
@@ -105,7 +83,6 @@ public class WorldDataHelper : MonoBehaviour
         return worldData.chunkDataDictionary.Keys
             .Where(pos => allChunkDataPositionsNeeded.Contains(pos) == false)
             .ToList();
-
     }
 
     internal static void RemoveChunkData(World world, Vector3Int pos)

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eff4b543cb2286e4e930e7486c479ff4, type: 3}
   m_Name: Voxel Data
   m_EditorClassIdentifier: 
-  textureSizeX: 0.2
-  textureSizeY: 0.2
+  textureSizeX: 0.25
+  textureSizeY: 0.25
   textureDataList:
   - voxelType: 1
     top: {x: 0, y: 0}
@@ -23,79 +23,44 @@ MonoBehaviour:
     isSolid: 0
     generatesCollider: 0
   - voxelType: 2
-    top: {x: 0, y: 1}
-    bottom: {x: 0, y: 1}
-    leftRight: {x: 0, y: 0}
-    frontBack: {x: 0, y: 2}
+    top: {x: 1, y: 3}
+    bottom: {x: 1, y: 3}
+    leftRight: {x: 0, y: 3}
+    frontBack: {x: 2, y: 3}
     isSolid: 1
     generatesCollider: 1
   - voxelType: 3
     top: {x: 1, y: 2}
-    bottom: {x: 1, y: 2}
-    leftRight: {x: 1, y: 2}
-    frontBack: {x: 1, y: 2}
+    bottom: {x: 3, y: 3}
+    leftRight: {x: 0, y: 2}
+    frontBack: {x: 0, y: 2}
     isSolid: 1
     generatesCollider: 1
   - voxelType: 4
-    top: {x: 2, y: 2}
-    bottom: {x: 2, y: 2}
-    leftRight: {x: 2, y: 2}
-    frontBack: {x: 2, y: 2}
-    isSolid: 1
-    generatesCollider: 1
-  - voxelType: 5
-    top: {x: 2, y: 1}
-    bottom: {x: 2, y: 1}
-    leftRight: {x: 2, y: 1}
-    frontBack: {x: 2, y: 1}
-    isSolid: 1
-    generatesCollider: 1
-  - voxelType: 6
-    top: {x: 0, y: 3}
-    bottom: {x: 0, y: 3}
-    leftRight: {x: 0, y: 3}
-    frontBack: {x: 0, y: 3}
-    isSolid: 1
-    generatesCollider: 1
-  - voxelType: 7
-    top: {x: 2, y: 0}
-    bottom: {x: 2, y: 0}
-    leftRight: {x: 2, y: 0}
-    frontBack: {x: 2, y: 0}
-    isSolid: 1
-    generatesCollider: 1
-  - voxelType: 8
-    top: {x: 3, y: 1}
-    bottom: {x: 3, y: 3}
-    leftRight: {x: 3, y: 2}
-    frontBack: {x: 3, y: 2}
-    isSolid: 1
-    generatesCollider: 1
-  - voxelType: 9
     top: {x: 3, y: 3}
     bottom: {x: 3, y: 3}
     leftRight: {x: 3, y: 3}
     frontBack: {x: 3, y: 3}
     isSolid: 1
     generatesCollider: 1
-  - voxelType: 10
-    top: {x: 3, y: 0}
-    bottom: {x: 3, y: 0}
-    leftRight: {x: 3, y: 0}
-    frontBack: {x: 3, y: 0}
+  - voxelType: 5
+    top: {x: 2, y: 2}
+    bottom: {x: 2, y: 2}
+    leftRight: {x: 2, y: 2}
+    frontBack: {x: 2, y: 2}
     isSolid: 1
     generatesCollider: 1
-  - voxelType: 11
-    top: {x: 4, y: 0}
-    bottom: {x: 4, y: 0}
-    leftRight: {x: 4, y: 0}
-    frontBack: {x: 4, y: 0}
+  - voxelType: 6
+    top: {x: 3, y: 2}
+    bottom: {x: 3, y: 2}
+    leftRight: {x: 3, y: 2}
+    frontBack: {x: 3, y: 2}
     isSolid: 0
     generatesCollider: 0
-  - voxelType: 12
-    top: {x: 4, y: 1}
-    bottom: {x: 4, y: 1}
-    leftRight: {x: 4, y: 1}
-    frontBack: {x: 4, y: 1}
+  - voxelType: 7
+    top: {x: 0, y: 1}
+    bottom: {x: 0, y: 1}
+    leftRight: {x: 0, y: 1}
+    frontBack: {x: 0, y: 1}
     isSolid: 1
     generatesCollider: 1

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WaterLayerHandler : VoxelLayerHandler
 {
-    public int waterLevel = 8;
+    public int waterLevel = 4;
     protected override bool TryHandling(ChunkData chunkData, int x, int y, int z, int groundHeight, Vector2Int terrainOffset)
     {
         if(y > groundHeight && y <= waterLevel)

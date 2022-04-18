@@ -11,7 +11,6 @@ using UnityEngine;
 
 public static class VoxelHelper
 {
-    //public bool cullFaces = true;
     private static Direction[] directions =
     {
         Direction.backwards,

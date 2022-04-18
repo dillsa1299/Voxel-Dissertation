@@ -9,7 +9,7 @@ using UnityEngine;
 
 public class VoxelDataManager : MonoBehaviour
 {
-    public static float textureOffset = 0.001f; //Helps prevent texture artifacting
+    public static float textureOffset = 0.0078125f; //Helps prevent texture artifacting
     public static float tileSizeX, tileSizeY; //Size of each tile within tilemap
     public static Dictionary<VoxelType, TextureData> voxelTextureDataDictionary = new
         Dictionary<VoxelType, TextureData>();
