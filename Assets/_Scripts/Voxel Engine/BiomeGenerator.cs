@@ -6,6 +6,7 @@ public class BiomeGenerator : MonoBehaviour
 {
     public float noiseScale = 0.01f;
     public NoiseData noiseData;
+    public int waterLevel = 12;
     public VoxelLayerHandler startLayerHandler;
     public List<VoxelLayerHandler> additionalLayerHandlers;
 
@@ -23,12 +24,12 @@ public class BiomeGenerator : MonoBehaviour
 
         for (int y = 0; y < data.height-1; y++)
         {
-            startLayerHandler.Handle(data, x, y, z, groundPosition, terrainOffset);
+            startLayerHandler.Handle(data, x, y, z, groundPosition, terrainOffset, waterLevel);
         }
 
         foreach(var layer in additionalLayerHandlers)
         {
-            layer.Handle(data, x, data.worldPos.y, z, groundPosition, terrainOffset);
+            layer.Handle(data, x, data.worldPos.y, z, groundPosition, terrainOffset, waterLevel);
         }
 
         return data;

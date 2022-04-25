@@ -17,7 +17,6 @@ public class MainController : MonoBehaviour
 
     public World world;
     public BiomeGenerator biome;
-    public WaterLayerHandler waterLayer;
     public NoiseData noiseData;
 
     public bool isPlaying = false;
@@ -219,7 +218,7 @@ public class MainController : MonoBehaviour
         PerlinOptions_OffsetX.text = "";
         PerlinOptions_OffsetY.placeholder.GetComponent<Text>().text = world.terrainOffset.y.ToString();
         PerlinOptions_OffsetY.text = "";
-        PerlinOptions_WaterHeight.placeholder.GetComponent<Text>().text = waterLayer.waterLevel.ToString();
+        PerlinOptions_WaterHeight.placeholder.GetComponent<Text>().text = biome.waterLevel.ToString();
         PerlinOptions_WaterHeight.text = "";
         PerlinOptions_NoiseScale.placeholder.GetComponent<Text>().text = biome.noiseScale.ToString();
         PerlinOptions_NoiseScale.text = "";
@@ -285,7 +284,7 @@ public class MainController : MonoBehaviour
         }
         if(PerlinOptions_WaterHeight.text != "")
         {
-            waterLayer.waterLevel = int.Parse(PerlinOptions_WaterHeight.text);
+            biome.waterLevel = int.Parse(PerlinOptions_WaterHeight.text);
         }
         if(PerlinOptions_NoiseScale.text != "")
         {

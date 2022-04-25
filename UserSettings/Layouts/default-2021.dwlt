@@ -145,7 +145,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 200}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 122
+  controlID: 75
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 1
-  controlID: 123
+  controlID: 76
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 8096}
   vertical: 0
-  controlID: 124
+  controlID: 77
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -363,7 +363,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 0
+    m_EnableMouseInput: 1
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1
@@ -425,9 +425,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
-      m_LastClickedID: 0
-      m_ExpandedIDs: 2efbffff
+      m_SelectedIDs: 38f9ffff
+      m_LastClickedID: -1736
+      m_ExpandedIDs: f8b1fbff2efbffffe0590000465a00006e5a0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -676,9 +676,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 298.30322, y: 128.36203, z: 57.800407}
+    m_Target: {x: -75.57191, y: 12.760304, z: -5.5370736}
     speed: 2
-    m_Value: {x: 298.30322, y: 128.36203, z: 57.800407}
+    m_Value: {x: -75.57191, y: 12.760304, z: -5.5370736}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -725,13 +725,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.02885875, y: -0.12799822, z: -0.0037180511, w: -0.99133205}
+    m_Target: {x: -0.12278176, y: -0.68595237, z: 0.11910001, w: -0.70728207}
     speed: 2
-    m_Value: {x: 0.028859189, y: -0.12800017, z: -0.003718108, w: -0.9913472}
+    m_Value: {x: -0.12277939, y: -0.68593913, z: 0.11909771, w: -0.7072684}
   m_Size:
-    m_Target: 243.1152
+    m_Target: 0.6928205
     speed: 2
-    m_Value: 243.1152
+    m_Value: 0.6928205
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -797,22 +797,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/_Scripts
+    - Assets/_Scripts/Voxel Engine/VoxelLayers
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/_Scripts
+  - Assets/_Scripts/Voxel Engine/VoxelLayers
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\University\Desktop\Voxels Project
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 505b0000
-    m_LastClickedID: 23376
-    m_ExpandedIDs: 00000000505b0000525b0000585b0000
+    m_SelectedIDs: 725c0000
+    m_LastClickedID: 23666
+    m_ExpandedIDs: 00000000505b0000525b00006c5c0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -867,7 +867,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000
     m_RenameOverlay:
       m_UserAcceptedRename: 0

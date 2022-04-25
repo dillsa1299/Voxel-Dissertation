@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AirLayerHandler : VoxelLayerHandler
 {
-    protected override bool TryHandling(ChunkData chunkData, int x, int y, int z, int groundHeight, Vector2Int terrainOffset)
+    protected override bool TryHandling(ChunkData chunkData, int x, int y, int z, int groundHeight, Vector2Int terrainOffset, int waterLevel)
     {
         if(y > groundHeight)
         {
