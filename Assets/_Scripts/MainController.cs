@@ -19,6 +19,8 @@ public class MainController : MonoBehaviour
     public BiomeGenerator biome;
     public NoiseData noiseData;
 
+    public CaveLayerHandler caveLayer;
+
     public bool isPlaying = false;
     public float chunkUpdateTime = 1f;
 
@@ -35,11 +37,14 @@ public class MainController : MonoBehaviour
     public InputField PerlinOptions_OffsetY;
     public InputField PerlinOptions_WaterHeight;
     public InputField PerlinOptions_NoiseScale;
-    public InputField PerlinAdvancedOptions_Persistance;
+    public InputField PerlinAdvancedOptions_Persistence;
     public InputField PerlinAdvancedOptions_Redistribution;
     public InputField PerlinAdvancedOptions_Exponent;
     public InputField PerlinAdvancedOptions_NoiseZoom;
     public InputField PerlinAdvancedOptions_Octaves;
+    public InputField PerlinAdvancedOptions_CaveNoise;
+    public InputField PerlinAdvancedOptions_CaveMin;
+    public InputField PerlinAdvancedOptions_CaveMax;
 
     enum GameMode
     {
@@ -58,6 +63,8 @@ public class MainController : MonoBehaviour
     {
         StartMenu();
         currentChunkCenterPos = Vector3Int.RoundToInt(player.transform.position);
+        world.terrainOffset.y = 0812;
+        world.terrainOffset.x = 2203;
     }
 
     public void ToggleCulling()
@@ -235,8 +242,8 @@ public class MainController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None; //Unlocks Cursor
         isPlaying = false;
 
-        PerlinAdvancedOptions_Persistance.placeholder.GetComponent<Text>().text = noiseData.persistance.ToString();
-        PerlinAdvancedOptions_Persistance.text = "";
+        PerlinAdvancedOptions_Persistence.placeholder.GetComponent<Text>().text = noiseData.persistence.ToString();
+        PerlinAdvancedOptions_Persistence.text = "";
         PerlinAdvancedOptions_Redistribution.placeholder.GetComponent<Text>().text = noiseData.redistributionModifier.ToString();
         PerlinAdvancedOptions_Redistribution.text = "";
         PerlinAdvancedOptions_Exponent.placeholder.GetComponent<Text>().text = noiseData.exponent.ToString();
@@ -245,6 +252,12 @@ public class MainController : MonoBehaviour
         PerlinAdvancedOptions_NoiseZoom.text = "";
         PerlinAdvancedOptions_Octaves.placeholder.GetComponent<Text>().text = noiseData.octaves.ToString();
         PerlinAdvancedOptions_Octaves.text = "";
+        PerlinAdvancedOptions_CaveNoise.placeholder.GetComponent<Text>().text = caveLayer.noiseScale.ToString();
+        PerlinAdvancedOptions_CaveNoise.text = "";
+        PerlinAdvancedOptions_CaveMin.placeholder.GetComponent<Text>().text = caveLayer.noiseMin.ToString();
+        PerlinAdvancedOptions_CaveMin.text = "";
+        PerlinAdvancedOptions_CaveMax.placeholder.GetComponent<Text>().text = caveLayer.noiseMax.ToString();
+        PerlinAdvancedOptions_CaveMax.text = "";
     }
 
     public void StartGameplay()
@@ -294,9 +307,9 @@ public class MainController : MonoBehaviour
 
     public void SetInputPerlinAdvanced()
     {
-        if(PerlinAdvancedOptions_Persistance.text != "")
+        if(PerlinAdvancedOptions_Persistence.text != "")
         {
-            noiseData.persistance = float.Parse(PerlinAdvancedOptions_Persistance.text.ToString());
+            noiseData.persistence = float.Parse(PerlinAdvancedOptions_Persistence.text.ToString());
         }
         if(PerlinAdvancedOptions_Redistribution.text != "")
         {

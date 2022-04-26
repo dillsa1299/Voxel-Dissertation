@@ -151,12 +151,6 @@ public class World : MonoBehaviour
         }, taskTokenSource.Token
         );
     }
-    /*
-
-        Could Set chunkDataPositionsToCreate to current chunk positions,
-        then clear current chunk positions
-
-    */
 
     private Task<ConcurrentDictionary<Vector3Int, ChunkData>> CalculateWorldChunkData(List<Vector3Int> chunkDataPositionsToCreate)
     {
@@ -278,7 +272,7 @@ public class World : MonoBehaviour
         ChunkRenderer chunkRenderer = chunkObject.GetComponent<ChunkRenderer>();
         worldData.chunkDictionary.Add(pos, chunkRenderer);
         chunkRenderer.InitializeChunk(worldData.chunkDataDictionary[pos]);
-        chunkRenderer.UpdateChunk(meshData);
+        chunkRenderer.UpdateChunk(meshData);        
     }
 
     public struct WorldGenerationData

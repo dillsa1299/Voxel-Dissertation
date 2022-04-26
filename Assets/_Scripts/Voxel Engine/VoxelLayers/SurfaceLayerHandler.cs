@@ -9,6 +9,11 @@ public class SurfaceLayerHandler : VoxelLayerHandler
         if(y == groundHeight)
         {
             Vector3Int pos = new Vector3Int(x, y, z);
+            if (y <= waterLevel)
+            {
+                Chunk.SetVoxel(chunkData, pos, VoxelType.Sand);
+                return true;
+            }
             Chunk.SetVoxel(chunkData, pos, VoxelType.Grass);
             return true;
         }
