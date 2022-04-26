@@ -242,7 +242,7 @@ public class MainController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None; //Unlocks Cursor
         isPlaying = false;
 
-        PerlinAdvancedOptions_Persistence.placeholder.GetComponent<Text>().text = noiseData.persistence.ToString();
+        PerlinAdvancedOptions_Persistence.placeholder.GetComponent<Text>().text = noiseData.persistance.ToString();
         PerlinAdvancedOptions_Persistence.text = "";
         PerlinAdvancedOptions_Redistribution.placeholder.GetComponent<Text>().text = noiseData.redistributionModifier.ToString();
         PerlinAdvancedOptions_Redistribution.text = "";
@@ -309,7 +309,7 @@ public class MainController : MonoBehaviour
     {
         if(PerlinAdvancedOptions_Persistence.text != "")
         {
-            noiseData.persistence = float.Parse(PerlinAdvancedOptions_Persistence.text.ToString());
+            noiseData.persistance = float.Parse(PerlinAdvancedOptions_Persistence.text.ToString());
         }
         if(PerlinAdvancedOptions_Redistribution.text != "")
         {
@@ -326,6 +326,18 @@ public class MainController : MonoBehaviour
         if(PerlinAdvancedOptions_Octaves.text != "")
         {
             noiseData.octaves = int.Parse(PerlinAdvancedOptions_Octaves.text.ToString());
+        }
+        if(PerlinAdvancedOptions_CaveNoise.text != "")
+        {
+            caveLayer.noiseScale = float.Parse(PerlinAdvancedOptions_CaveNoise.text.ToString());
+        }
+        if(PerlinAdvancedOptions_CaveMin.text != "")
+        {
+            caveLayer.noiseMin = float.Parse(PerlinAdvancedOptions_CaveMin.text.ToString());
+        }
+        if(PerlinAdvancedOptions_CaveMax.text != "")
+        {
+            caveLayer.noiseMax = float.Parse(PerlinAdvancedOptions_CaveMax.text.ToString());
         }
     }
 }

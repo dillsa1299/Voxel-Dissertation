@@ -9289,7 +9289,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noiseScale: 0.03
   noiseData: {fileID: 11400000, guid: 7cedece3bf8802141950f93ad456c887, type: 2}
-  waterLevel: 12
+  waterLevel: 6
   startLayerHandler: {fileID: 761796829}
   additionalLayerHandlers:
   - {fileID: 1300621216}
@@ -10388,7 +10388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 2017128635}
-  moveSpeed: 12
+  moveSpeed: 10
 --- !u!4 &2017128638
 Transform:
   m_ObjectHideFlags: 0

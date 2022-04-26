@@ -53,7 +53,7 @@ public static class CustomNoise
             
             amplitudeSum += amplitude;
 
-            amplitude *= noiseData.persistence;
+            amplitude *= noiseData.persistance;
             frequency *= 2;
         }
         return total / amplitudeSum;

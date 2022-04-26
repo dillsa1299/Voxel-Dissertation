@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &9077954154025081963
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9077954154025081957}
+  - component: {fileID: 9077954154025081962}
+  m_Layer: 0
+  m_Name: MainController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9077954154025081957
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9077954154025081963}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 23.798862, y: 50.5914, z: -12.000972}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9077954154025081962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9077954154025081963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 153ce0e1b23f0be438ef8da45d729ada, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  playerChunkPos: {x: 0, y: 0, z: 0}
+  world: {fileID: 0}
+  biome: {fileID: 0}
+  noiseData: {fileID: 11400000, guid: 7cedece3bf8802141950f93ad456c887, type: 2}
+  caveLayer: {fileID: 0}
+  isPlaying: 0
+  chunkUpdateTime: 1
+  Menu: {fileID: 0}
+  Options: {fileID: 0}
+  PerlinOptions: {fileID: 0}
+  PerlinAdvancedOptions: {fileID: 0}
+  statsHUD: {fileID: 0}
+  Options_RenderDistance: {fileID: 0}
+  Options_ChunkHeight: {fileID: 0}
+  PerlinOptions_OffsetX: {fileID: 0}
+  PerlinOptions_OffsetY: {fileID: 0}
+  PerlinOptions_WaterHeight: {fileID: 0}
+  PerlinOptions_NoiseScale: {fileID: 0}
+  PerlinAdvancedOptions_Persistence: {fileID: 0}
+  PerlinAdvancedOptions_Redistribution: {fileID: 0}
+  PerlinAdvancedOptions_Exponent: {fileID: 0}
+  PerlinAdvancedOptions_NoiseZoom: {fileID: 0}
+  PerlinAdvancedOptions_Octaves: {fileID: 0}
+  PerlinAdvancedOptions_CaveNoise: {fileID: 0}
+  PerlinAdvancedOptions_CaveMin: {fileID: 0}
+  PerlinAdvancedOptions_CaveMax: {fileID: 0}

@@ -12,8 +12,10 @@ OPTIONS
 PERLIN GENERATION OPTIONS
 - Offset X:
 	Sets X offset for Perlin noise.
+	Note: Values over 5 digits aren't recommended due to irregular terrain generation.
 - Offset Y:
 	Sets Y offset for Perlin noise.
+	Note: Values over 5 digits aren't recommended due to irregular terrain generation
 - Water Height:
 	Sets the water level.
 - Noise Scale:
@@ -45,6 +47,7 @@ PERLIN GENERATION ADVANCED OPTIONS - Cave Generation
 - Min Threshold:
 	Values from 0 -> 1
 	The minimum value of Perlin noise to generate a cave.
+	Note: A larger threshold range results in caves generating more frequently.
 - Max Threshold:
 	Values from 0 -> 1
 	The maximum value of Perlin noise to generate a cave.
