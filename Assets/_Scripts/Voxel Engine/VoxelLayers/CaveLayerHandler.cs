@@ -15,7 +15,7 @@ public class CaveLayerHandler : VoxelLayerHandler
     protected override bool TryHandling(ChunkData chunkData, int x, int y, int z, int groundHeight, Vector2Int terrainOffset, int waterLevel)
     {
         //x,y,z is local chunk xyz, need global
-        if (y <= groundHeight) // && y <= waterLevel
+        if (y <= groundHeight)
         {
             if(Perlin3D(chunkData.worldPos.x + x,y,chunkData.worldPos.z + z)<noiseMax)
             {
@@ -45,13 +45,14 @@ public class CaveLayerHandler : VoxelLayerHandler
         z *= noiseScale;
     
         float xy = Mathf.PerlinNoise(x,y);
-        float xz = Mathf.PerlinNoise(x,z);
-        float yx = Mathf.PerlinNoise(y,x);
         float yz = Mathf.PerlinNoise(y,z);
-        float zx = Mathf.PerlinNoise(z,x);
+        float xz = Mathf.PerlinNoise(x,z);
+
+        float yx = Mathf.PerlinNoise(y,x);
         float zy = Mathf.PerlinNoise(z,y);
+        float zx = Mathf.PerlinNoise(z,x);
     
-        return (xy+xz+yx+yz+zx+zy) / 6;
+        return (xy + yz + xz + yx + zy + zx) / 6;
     }
 }
 

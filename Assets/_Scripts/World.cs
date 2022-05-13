@@ -151,12 +151,6 @@ public class World : MonoBehaviour
         }, taskTokenSource.Token
         );
     }
-    /*
-
-        Could Set chunkDataPositionsToCreate to current chunk positions,
-        then clear current chunk positions
-
-    */
 
     private Task<ConcurrentDictionary<Vector3Int, ChunkData>> CalculateWorldChunkData(List<Vector3Int> chunkDataPositionsToCreate)
     {
